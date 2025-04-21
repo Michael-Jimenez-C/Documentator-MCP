@@ -1,0 +1,17 @@
+[project]
+name = "documentator-mcp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "mcp[cli]>=1.6.0",
+]
+
+[dependency-groups]
+dev = [
+    "documentator-mcp",
+]
+
+[tool.uv.sources]
+documentator-mcp = { workspace = true }
