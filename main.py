@@ -2,7 +2,7 @@ from mcp.server.fastmcp import FastMCP
 import os
 from plantuml import PlantUML
 
-mcp = FastMCP("Documentator-MCP")
+mcp = FastMCP("Documentator-MCP", dependencies=["PlantUML"])
 
 WD = os.environ.get("WD", os.environ.get('HOME'))
 ignore_names = os.environ.get("IGNORE_NAMES", "").split(",")
@@ -63,8 +63,8 @@ async def create_dir(relative_path: str) -> None:
 
 
 @mcp.tool()
-async def diagramPlantUML(diagram_code: str, path: str) -> None:
-    path = santize_path(path)
+async def diagramPlantUML(diagram_code: str, relative_path: str) -> None:
+    path = santize_path(relative_path)
     plantuml_client = PlantUML(url='http://www.plantuml.com/plantuml/svg/')
     svg_content = plantuml_client.processes(diagram_code)
     with open(path,'wb') as file:

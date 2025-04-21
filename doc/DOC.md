@@ -1,7 +1,8 @@
-# Documentation for Documentator-MCP
+# Documentaci�n del Proyecto: Documentator-MCP
 
-## Project Structure
-The project has the following structure:
+## Estructura del Proyecto
+El proyecto tiene la siguiente estructura:
+
 ```
 main.py
 pyproject.toml
@@ -9,92 +10,68 @@ README.md
 uv.lock
 ```
 
-## Dependencies
-The project uses the following dependencies:
-- `mcp[cli]>=1.6.0`: Provides CLI tools for MCP.
+## Descripci�n
+Este proyecto es una herramienta para documentar autom�ticamente un proyecto utilizando agentes MCP como Claude, Copilot u otros. Est� dise�ado para ejecutarse como un servidor MCP.
 
-### Development Dependencies
-- `documentator-mcp`: Included as a development dependency.
+- **Nombre del proyecto**: documentator-mcp
+- **Versi�n**: 0.1.0
+- **Versi�n m�nima de Python requerida**: >= 3.13
 
-## Description
-This project, `documentator-mcp`, is designed to work with Python version `>=3.13`. It provides tools for managing and documenting MCP-based projects.
+## Dependencias
+El proyecto utiliza las siguientes dependencias:
 
-## APIs and Tools
-The project defines several tools and APIs using the `mcp` framework:
+- `mcp[cli]>=1.6.0`: Proporciona funcionalidades de cliente MCP.
+- `plantuml>=0.3.0`: Para generar diagramas UML.
+- `six>=1.17.0`: Biblioteca de compatibilidad entre Python 2 y 3.
 
-### Tools
-1. **get_files(relative_path: str) -> dict**
-   - Retrieves a list of directories and files in the specified relative path.
+Dependencias de desarrollo:
+- `documentator-mcp`
 
-2. **tree(relative_path: str, max_deep: int = 5) -> dict**
-   - Recursively lists files and directories up to a specified depth.
+## CLI
+El proyecto incluye un servidor MCP que se ejecuta con el siguiente comando:
 
-3. **read_file(file_relative_path: str) -> str**
-   - Reads the content of a file.
+```bash
+uv --directory path/documentator-mcp run main.py
+```
 
-4. **write_file(file_relative_path: str, content: str) -> None**
-   - Writes content to a file.
+Variables de entorno importantes:
+- `WD`: Directorio de trabajo.
+- `IGNORE_NAMES`: Nombres de archivos o carpetas a ignorar, como `.git`, `.venv`, `__pycache__`.
 
-5. **create_dir(relative_path: str) -> None**
-   - Creates a directory at the specified relative path.
+## APIs y Herramientas
+El proyecto define varias herramientas MCP:
 
-6. **diagram(diagram_type: str, diagram_code: str, path: str) -> None**
-   - Generates and saves a diagram using Mermaid.
+1. **get_files**: Devuelve los archivos y directorios en una ruta relativa.
+2. **tree**: Genera un �rbol de archivos hasta una profundidad m�xima.
+3. **read_file**: Lee el contenido de un archivo.
+4. **write_file**: Escribe contenido en un archivo.
+5. **create_dir**: Crea un directorio.
+6. **diagramPlantUML**: Genera diagramas UML y los guarda en formato SVG.
 
-### Prompt
-The project includes a prompt for generating documentation:
+## Ejemplo de Uso
+Un ejemplo de c�mo generar un diagrama UML:
+
 ```python
-@mcp.prompt()
-def documentation_prompt() -> str:
-    return """
-    Eres el encargado de documentar el c�digo del proyecto.
-    Vas a analizar el codigo del proyecto, y sus dependencias, luego vas a generar una carpeta doc y un archivo DOC.md en donde vas a documentar todo.
-    Las secciones obligatorias son: Estructura del proyecto, dependencias, Descripci�n con la versi�n de python.
-    Las secciones opcionales pero importantes son: CLI, APIs, ENDPOINTS, ENTRYPOINTS, DataClasses, y cualquier otra secci�n que consideres necesaria.
-    La documentaci�n debe ser clara y concisa, y debe incluir ejemplos de uso y cualquier otra informaci�n relevantes si estos aparecen en los docstrings.
+from plantuml import PlantUML
 
-    Puedes generar imagenes, las cuales van a estar guardadas en una carpeta doc_images.
-
-    Puedes documentar utilizando mermaid para un diagrama, no hagas diagramas de clases.
-
-    aquellas partes que no puedas completar por tu cuenta en el markdown puedes dejarlo como un comentario.
-    """
+plantuml_client = PlantUML(url='http://www.plantuml.com/plantuml/svg/')
+diagram_code = """@startuml
+Alice -> Bob: Hello
+@enduml"""
+svg_content = plantuml_client.processes(diagram_code)
+with open('diagram.svg', 'wb') as file:
+    file.write(svg_content)
 ```
 
-## Entry Point
-The entry point for the project is `main.py`, which initializes and runs the MCP server using the `mcp.run()` method.
+## ENTRYPOINT
+El punto de entrada del proyecto es el archivo `main.py`, que inicializa y ejecuta el servidor MCP.
 
-## Examples
-### Example Usage of `get_files`
-```python
-from mcp.server.fastmcp import FastMCP
+## ENDPOINTS
+El servidor MCP se ejecuta utilizando transporte `stdio`.
 
-mcp = FastMCP("Documentator-MCP")
+## DataClasses
+No se identificaron DataClasses en el c�digo proporcionado.
 
-@mcp.tool()
-async def get_files(relative_path: str) -> dict:
-    # Implementation here
-    pass
-```
-
-### Example Usage of `diagram`
-```python
-from mermaid.graph import Graph
-
-diag = Graph("sequenceDiagram", "Alice->>Bob: Hello Bob")
-diag.save("diagram.png")
-```
-
-## Additional Notes
-- The project uses environment variables such as `WD` and `IGNORE_NAMES` for configuration.
-- The `santize_path` function ensures paths are within the working directory.
-
-## TEST PROMPT
-
-```
-Solo utilizando herramientas del mcp-documentator, Eres el encargado de documentar el código del proyecto.
-Vas a analizar el codigo del proyecto, y sus dependencias, luego vas a generar una carpeta doc y un archivo DOC.md en donde vas a documentar todo.
-Las secciones obligatorias son: Estructura del proyecto, dependencias, Descripción con la versión de python.
-Las secciones opcionales pero importantes son: CLI, APIs, ENDPOINTS, ENTRYPOINTS, DataClasses, y cualquier otra sección que consideres necesaria.
-La documentación debe ser clara y concisa, y debe incluir ejemplos de uso y cualquier otra información relevantes si estos aparecen en los docstrings.
-```
+## Notas Adicionales
+- El archivo `README.md` proporciona una breve descripci�n del proyecto.
+- El archivo `pyproject.toml` define las configuraciones del proyecto y sus dependencias.
