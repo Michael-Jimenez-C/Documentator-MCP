@@ -1,0 +1,8 @@
+sequenceDiagram
+    participant User
+    participant MCP
+    participant Tools
+    User->>MCP: Request Documentation
+    MCP->>Tools: Analyze Code
+    Tools-->>MCP: Return Analysis
+    MCP-->>User: Provide Documentation
