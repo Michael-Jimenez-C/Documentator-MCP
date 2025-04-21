@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
 import os
-from mermaid.graph import Graph
+from plantuml import PlantUML
 
 mcp = FastMCP("Documentator-MCP")
 
@@ -63,10 +63,13 @@ async def create_dir(relative_path: str) -> None:
 
 
 @mcp.tool()
-async def diagram(diagram_type: str, diagram_code: str, path: str) -> None:
+async def diagramPlantUML(diagram_code: str, path: str) -> None:
     path = santize_path(path)
-    diag = Graph(diagram_type, diagram_code)
-    diag.save(path)
+    plantuml_client = PlantUML(url='http://www.plantuml.com/plantuml/svg/')
+    svg_content = plantuml_client.processes(diagram_code)
+    with open(path,'wb') as file:
+        file.write(svg_content)
+        file.close()
     return path
 
 @mcp.prompt()
@@ -78,9 +81,7 @@ def documentation_prompt() -> str:
     Las secciones opcionales pero importantes son: CLI, APIs, ENDPOINTS, ENTRYPOINTS, DataClasses, y cualquier otra sección que consideres necesaria.
     La documentación debe ser clara y concisa, y debe incluir ejemplos de uso y cualquier otra información relevantes si estos aparecen en los docstrings.
 
-    Puedes generar imagenes, las cuales van a estar guardadas en una carpeta doc_images.
-
-    Puedes documentar utilizando mermaid para un diagrama, no hagas diagramas de clases.
+    Puedes generar diagramas plantuml o mermaid para representar información, los plantuml pueden ser generados, pero los de mermaid se deben generar en un documento para que se procesen manualmente.
 
     aquellas partes que no puedas completar por tu cuenta en el markdown puedes dejarlo como un comentario.
     """
