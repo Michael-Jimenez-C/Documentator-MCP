@@ -15,12 +15,12 @@ Busca en tu cliente la opción de mcp, y agrega esta linea.
                 "command": "uv",
                 "args": [
                     "--directory",
-                    "C:/Users/micha/OneDrive/Documentos/GitHub/documentator-mcp",
+                    "<ruta>/documentator-mcp",
                     "run",
                     "main.py"
                 ],
                 "env": {
-                    "WD": "C:/Users/micha/OneDrive/Documentos/GitHub/documentator-mcp",
+                    "WD": "<ruta>/documentator-mcp",
                     "IGNORE_NAMES": ".git,.venv,.venv,__pycache__"
                 }
             }
